@@ -57,7 +57,8 @@ effective support:
 - SigLIP 2 B/16;
 - SigLIP 2 with its five highest-norm tokens protected.
 
-It runs on a laptop CPU in about a minute at M = 200.
+The committed notebook shows its outputs on an ImageNet validation image. It
+runs on a laptop CPU in about 3 minutes at M = 1000.
 
 ## ImageNet runs
 
