@@ -1,0 +1,10 @@
+__pycache__/
+*.egg-info/
+.ipynb_checkpoints/
+.DS_Store
+# Local agent instructions hold machine paths; keep them out of the public repo.
+AGENTS.md
+# Machine-specific config, data links, probes and run outputs.
+configs/local.yaml
+local/
+outputs/
