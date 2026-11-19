@@ -1,0 +1,17 @@
+# SigLIP 2 with a test-time register. Use on top of a base config, e.g.
+#   python src/core/run_mctp.py configs/mctp.yaml configs/siglip2_test_time_registers.yaml
+# The 20 neurons were chosen by src/core/calibrate_registers.py on 500 ImageNet training images.
+# Set register_neurons: [] for the empty-register control.
+
+model:
+  backbone: siglip2_vitb16
+  probe: probes/siglip2_vitb16.safetensors
+
+mctp:
+  intervention: registers
+  register_neurons: [[9, 1038], [5, 1449], [5, 153], [5, 401], [5, 2996], [5, 2659], [5, 2809], [6, 311],
+                     [5, 1816], [8, 1037], [5, 1080], [6, 3019], [5, 1468], [5, 1481], [9, 143], [4, 1883],
+                     [4, 282], [4, 2232], [4, 1185], [4, 1508]]
+
+run:
+  output_dir: outputs/siglip2_test_time_registers

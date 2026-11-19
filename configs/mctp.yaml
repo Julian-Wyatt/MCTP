@@ -1,0 +1,41 @@
+# Generic MCTP run. Copy to configs/local.yaml (gitignored) and set your paths there.
+# Later YAML files and command-line `section.key=value` overrides take precedence, e.g.
+#   python src/core/run_mctp.py configs/mctp.yaml model.backbone=siglip2_vitb16 \
+#       model.probe=probes/siglip2_vitb16.safetensors mctp.protection=top_norm
+
+data:
+  imagenet_root: /path/to/imagenet  # contains val/<wnid>/<filename>.JPEG (and train/ for register calibration)
+  boxes: /path/to/ILSVRC2012_bbox_val_v3.tgz  # or the extracted XML directory; "" skips off-box mass
+  max_images: 0  # 0 = all 50,000 validation images
+  batch_size: 16
+  num_workers: 8
+
+model:
+  backbone: dinov3_vitb16  # dinov3_vits16 | dinov3_vitb16 | dinov3_vitl16 | siglip2_vitb16
+  probe: probes/dinov3_vitb16.safetensors
+
+mctp:
+  depths: [0, 3, 6, 9]  # dinov3_vitl16 (24 blocks): [0, 6, 12, 18]
+  num_draws: 1000
+  keep_fraction: 0.1
+  region_sizes: [3, 7]
+  seed: 42
+  replay_batch: 128
+  protection: none  # none | top_norm | random: patch tokens kept in every draw
+  protected_tokens: 5
+  protection_seed: 42
+  intervention: none  # none | prefix_removed (DINOv3 with a GAP probe) | registers (SigLIP 2)
+  register_neurons: []  # for registers: [[block, unit], ...]; [] = empty-register control
+
+calibration:  # src/core/calibrate_registers.py
+  images: 500
+  seed: 42
+  top_k: [10, 20, 50, 100]
+  outlier_threshold: 5.0
+  last_block: 9
+
+run:
+  output_dir: outputs/dinov3_vitb16
+  device: cuda
+  shard: 0
+  num_shards: 1
