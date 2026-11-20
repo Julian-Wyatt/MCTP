@@ -148,11 +148,27 @@ python src/core/score_mctp.py configs/local.yaml    # stability and off-box mass
 | `stability` | [I, D] | share of draws whose top-1 is still ŷ |
 | `depths`, `wnids`, `config` | | the depths, class WNIDs and resolved configuration |
 
-### Precision and cost
+### Precision
 
 - **Precision:** the unpruned prediction and the blocks before l run in
   float32. On CUDA, the pruned draws run under bfloat16 autocast.
 - **Batching:** results depend on batching at floating-point noise level.
+
+### Runtime
+
+Runtime falls as the pruning depth l increases, because each draw runs only
+blocks l to L−1. Times for 1,000 draws per depth over the 50,000 validation
+images, with each depth run as its own job on two L40S GPUs (excluding the one
+unpruned pass per image):
+
+| Backbone | l = 0 | l = 3 | l = 6 | l = 9 | All four depths |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| DINOv3 B/16 | 54m23s | 42m20s | 30m48s | 20m46s | 2h28m17s |
+| SigLIP 2 B/16 | 41m51s | 34m42s | 25m53s | 18m50s | 2h01m16s |
+
+A full DINOv3 B/16 run is therefore about 5 GPU-hours. `run_mctp.py` uses one
+GPU; to use several, run depths as separate jobs, each with its own
+`run.output_dir`.
 
 ## Repository layout
 
