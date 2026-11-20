@@ -28,7 +28,7 @@ from trainer.mctp import random_tokens, token_impact_maps
 def main() -> None:
     cfg = load_config(sys.argv[1:])
     device = torch.device(cfg.run.device)
-    # The original GPU runs allowed bfloat16-internal float32 matmuls (no effect on CPU).
+    # Let float32 matmuls use bfloat16 internally on GPU (no effect on CPU).
     torch.set_float32_matmul_precision("medium")
 
     dataset = ImageNetSplit(cfg.data.imagenet_root, "val", image_transform(cfg.model.backbone))
