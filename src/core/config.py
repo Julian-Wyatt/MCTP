@@ -57,8 +57,6 @@ class CalibrationConfig:
 class RunConfig:
     output_dir: str = "outputs/mctp"
     device: str = "cuda"
-    shard: int = 0
-    num_shards: int = 1
 
 
 @dataclass
@@ -83,8 +81,6 @@ def load_config(arguments: list[str]) -> Config:
     cfg: Config = OmegaConf.to_object(merged)
     if cfg.model.backbone not in BACKBONES:
         raise ValueError(f"Unknown backbone {cfg.model.backbone!r}; choose from {sorted(BACKBONES)}.")
-    if not 0 <= cfg.run.shard < cfg.run.num_shards:
-        raise ValueError(f"run.shard={cfg.run.shard} must lie in [0, run.num_shards={cfg.run.num_shards}).")
     if not cfg.mctp.depths or cfg.mctp.depths != sorted(set(cfg.mctp.depths)) or cfg.mctp.depths[0] < 0:
         raise ValueError(f"mctp.depths must be non-negative and strictly increasing, got {cfg.mctp.depths}.")
     if not 0 < cfg.mctp.keep_fraction < 1 or cfg.mctp.num_draws <= 0 or cfg.mctp.protected_tokens <= 0:
@@ -99,5 +95,5 @@ def load_config(arguments: list[str]) -> Config:
     return cfg
 
 
-def shard_path(cfg: Config, shard: int) -> Path:
-    return Path(cfg.run.output_dir) / f"shard{shard:03d}of{cfg.run.num_shards:03d}.npz"
+def maps_path(cfg: Config) -> Path:
+    return Path(cfg.run.output_dir) / "token_impact_maps.npz"

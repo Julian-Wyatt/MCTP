@@ -1,8 +1,8 @@
-"""Token-impact maps for one shard of ImageNet validation.
+"""Token-impact maps over ImageNet validation.
 
 Run from the repository root (later YAML files and `section.key=value` override earlier ones):
     python src/core/run_mctp.py configs/mctp.yaml [more.yaml ...] [section.key=value ...]
-Writes <run.output_dir>/shard<i>of<n>.npz.
+Writes <run.output_dir>/token_impact_maps.npz.
 """
 
 import os
@@ -15,7 +15,7 @@ import torch
 from omegaconf import OmegaConf
 from torch.utils.data import DataLoader, Subset
 
-from core.config import load_config, shard_path
+from core.config import load_config, maps_path
 from data.imagenet import ImageNetSplit
 from data.transforms import NUM_PATCH_TOKENS, image_transform
 from models.backbones import FrozenViT
@@ -32,9 +32,8 @@ def main() -> None:
     torch.set_float32_matmul_precision("medium")
 
     dataset = ImageNetSplit(cfg.data.imagenet_root, "val", image_transform(cfg.model.backbone))
-    # Shards interleave the (optionally truncated) split, so every shard sees every class.
-    indices = list(range(cfg.data.max_images or len(dataset)))[cfg.run.shard :: cfg.run.num_shards]
-    loader = DataLoader(Subset(dataset, indices), batch_size=cfg.data.batch_size, num_workers=cfg.data.num_workers)
+    subset = Subset(dataset, range(cfg.data.max_images or len(dataset)))
+    loader = DataLoader(subset, batch_size=cfg.data.batch_size, num_workers=cfg.data.num_workers)
     model = PrunableClassifier.from_probe(FrozenViT(cfg.model.backbone), cfg.model.probe).to(device).eval()
     if model.head.out_features != len(dataset.wnids):
         raise ValueError(f"Probe predicts {model.head.out_features} classes, the dataset has {len(dataset.wnids)}.")
@@ -76,7 +75,7 @@ def main() -> None:
         outputs["stability"].append(stability.numpy())
         print(f"[MCTP] batch {batch + 1}/{len(loader)}", flush=True)
 
-    path = shard_path(cfg, cfg.run.shard)
+    path = maps_path(cfg)
     path.parent.mkdir(parents=True, exist_ok=True)
     np.savez(
         path,
@@ -85,7 +84,7 @@ def main() -> None:
         wnids=np.asarray(dataset.wnids),
         config=OmegaConf.to_yaml(cfg),
     )
-    print(f"[MCTP] wrote {len(indices)} images to {path}")
+    print(f"[MCTP] wrote {len(subset)} images to {path}")
 
 
 if __name__ == "__main__":

@@ -37,5 +37,3 @@ calibration:  # src/core/calibrate_registers.py
 run:
   output_dir: outputs/dinov3_vitb16
   device: cuda
-  shard: 0
-  num_shards: 1

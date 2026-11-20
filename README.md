@@ -109,12 +109,9 @@ runs on a laptop CPU in about 3 minutes at M = 1000.
 order: the YAML files given, then command-line `section.key=value` overrides.
 
 ```bash
-python src/core/run_mctp.py configs/local.yaml      # maps -> <run.output_dir>/shard000of001.npz
+python src/core/run_mctp.py configs/local.yaml      # maps -> <run.output_dir>/token_impact_maps.npz
 python src/core/score_mctp.py configs/local.yaml    # stability and off-box mass per depth -> summary.json
 ```
-
-To split a run across jobs, give each one `run.shard=<i> run.num_shards=<n>`.
-Score with the same configs once every shard has finished.
 
 ### Settings
 
@@ -139,7 +136,7 @@ Score with the same configs once every shard has finished.
 
 ### Outputs
 
-Each shard is an `.npz` with these arrays:
+`token_impact_maps.npz` holds these arrays:
 
 | Key | Shape | Contents |
 | --- | --- | --- |

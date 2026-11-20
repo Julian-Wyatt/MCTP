@@ -31,7 +31,7 @@ def random_tokens(filenames: list[str], num_tokens: int, count: int, seed: int) 
     """[B, N] bool marking `count` uniformly random patch tokens per image.
 
     The choice depends only on (seed, filename), so it is the same at every
-    depth and in every shard or batch.
+    depth and in every batch.
     """
     mask = torch.zeros(len(filenames), num_tokens, dtype=torch.bool)
     for row, filename in enumerate(filenames):
