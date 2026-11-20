@@ -67,6 +67,8 @@ Built with DINOv3.
 ## Setup
 
 ```bash
+git clone https://github.com/Julian-Wyatt/MCTP.git
+cd MCTP
 pip install -r requirements.txt
 ```
 
