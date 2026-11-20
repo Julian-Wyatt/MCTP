@@ -143,7 +143,7 @@ src/
 
 ## Licence
 
-- **Code:** licence to be added.
+- **Code:** MIT; see [`LICENSE`](LICENSE).
 - **Probes:** licensed as described in [`probes/README.md`](probes/README.md).
   The DINOv3 probe is under the DINOv3 License and the SigLIP 2 probe under
   Apache 2.0.
