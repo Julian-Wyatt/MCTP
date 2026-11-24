@@ -1,5 +1,9 @@
 # MCTP: Monte Carlo Token Pruning
 
+**[Token Pruning Needs a Protected Sink Token: Coherent Spatial Aggregation in Vision Transformers](https://arxiv.org/abs/2611.31025)**<br>
+Julian Wyatt, James Willoughby, Allison Clement, Irina Voiculescu<br>
+[arXiv](https://arxiv.org/abs/2611.31025) · [Project page](https://julianwyatt.co.uk/mctp)
+
 MCTP measures how much each patch token of a pretrained Vision Transformer
 matters when tokens are removed inside the network.
 
@@ -184,6 +188,22 @@ src/
     token_pruning/       region sampler, prunable classifier, interventions
   trainer/               MCTP replay and token-impact maps, register calibration
   utils/metrics/         token impact, off-box mass, rank agreement, effective support
+```
+
+## Citation
+
+If you use this code, please cite:
+
+```bibtex
+@misc{wyatt2026tokenpruning,
+      title={Token Pruning Needs a Protected Sink Token: Coherent Spatial Aggregation in Vision Transformers},
+      author={Julian Wyatt and James Willoughby and Allison Clement and Irina Voiculescu},
+      year={2026},
+      eprint={2611.31025},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2611.31025},
+}
 ```
 
 ## Licence
