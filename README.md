@@ -9,13 +9,13 @@ matters when tokens are removed inside the network.
 
 <p align="center">
   <img src="assets/coherent_aggregation.jpg" width="100%"
-       alt="Token-impact maps at pruning depths 3, 6 and 9 for DINOv3, SigLIP 2, and SigLIP 2 with its highest-norm tokens protected">
+       alt="Token impact maps at pruning depths 3, 6 and 9 for DINOv3, SigLIP 2, and SigLIP 2 with its highest-norm tokens protected">
 </p>
 
-*Token-impact maps for DINOv3 and SigLIP 2 B/16 linear probes, pruning once
-at block 3, 6 or 9 (selected examples). DINOv3 places its impact on the
-object at every depth. SigLIP 2 does not, until its five highest-norm tokens
-(white ×) are protected from pruning.*
+*Token impact maps for DINOv3 and SigLIP 2 B/16 linear probes, pruning once
+at block 3, 6 or 9 (selected examples). DINOv3 exhibits coherent token impact
+across pruning depths, while SigLIP 2 does not; protecting its five
+highest-norm tokens (white ×) moves its impact onto the object.*
 
 ## Method
 
@@ -28,9 +28,9 @@ object at every depth. SigLIP 2 does not, until its five highest-norm tokens
    block l. Each of M draws keeps about 10% of the patch tokens, as random
    square regions. Prefix tokens ([CLS], registers) are always kept.
 2. **Token impact:** for every token, the probability of the unpruned top-1
-   class over draws that keep the token is compared with draws that drop it:
+   class over draws that keep the token is compared with draws that remove it:
 
-   Δᵢ = E[p_ŷ | i kept] − E[p_ŷ | i dropped]
+   Δᵢ = E[p_ŷ | i kept] − E[p_ŷ | i removed]
 
 3. **Cached prefix:** blocks 0 … l−1 run once per image, and every draw reuses
    that cached state. A 1,000-draw run at l = 6 therefore costs about as much as
@@ -44,7 +44,7 @@ whichever depth it is pruned at, while SigLIP 2's rankings change with depth:
        alt="Spearman correlation and top-10% overlap of token impacts between pruning depths 0, 3, 6 and 9, DINOv3 below the diagonal and SigLIP 2 above">
 </p>
 
-*Spearman correlation (left) and top-10% overlap (right) between token-impact
+*Spearman correlation (left) and top-10% overlap (right) between token impact
 maps at different pruning depths, averaged over the ImageNet-1k validation
 set. DINOv3 is below the diagonal and SigLIP 2 above it.*
 
@@ -52,7 +52,7 @@ Built with DINOv3.
 
 ## Contents
 
-- **Token-impact maps** at several pruning depths for DINOv3 (S/B/L/16) and
+- **Token impact maps** at several pruning depths for DINOv3 (S/B/L/16) and
   SigLIP 2 (B/16) linear probes.
 - **Sink-token protection:**
   - keep the k highest-norm patch tokens entering block l in every draw;
@@ -186,7 +186,7 @@ src/
   data/                  transforms, ImageNet images and boxes
   models/                frozen backbones, probe files
     token_pruning/       region sampler, prunable classifier, interventions
-  trainer/               MCTP replay and token-impact maps, register calibration
+  trainer/               MCTP replay and token impact maps, register calibration
   utils/metrics/         token impact, off-box mass, rank agreement, effective support
 ```
 
